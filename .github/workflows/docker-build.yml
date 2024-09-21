@@ -26,5 +26,6 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        platforms: linux/amd64,linux/arm64,linux/arm/v7  
-        tags: kaspersvend/cv:latest
+        tags: |
+          kaspersvend/cv:latest
+          kaspersvend/cv:${{ github.sha }}  
