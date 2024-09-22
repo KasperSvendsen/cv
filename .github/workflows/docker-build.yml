@@ -25,7 +25,7 @@ jobs:
     - name: Get the latest tag
       id: get_tag
       run: |
-        latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` || echo "v0.1.0")
         echo "::set-output name=tag::$latest_tag"
 
     - name: Build and Push Docker Image for Multi-Architecture
