@@ -22,16 +22,6 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Get the latest tag
-      id: get_tag
-      run: |
-        latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1) || echo "v0.0.0")
-        echo "Latest tag: $latest_tag"
-        # Extract the version number and increment it
-        new_tag=$(echo $latest_tag | awk -F. -v OFS=. '{$NF++; print}')
-        echo "New tag: $new_tag"
-        echo "::set-output name=tag::$new_tag"
-
     - name: Build and Push Docker Image for Multi-Architecture
       uses: docker/build-push-action@v3
       with:
@@ -39,11 +29,3 @@ jobs:
         platforms: linux/amd64,linux/arm64,linux/arm/v7  
         tags: |
           kaspersvend/cv:latest
-          kaspersvend/cv:${{ steps.get_tag.outputs.tag }}
-
-    - name: Push new tag to GitHub
-      run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
-        git tag ${{ steps.get_tag.outputs.tag }}
-        git push origin ${{ steps.get_tag.outputs.tag }}
